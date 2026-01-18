@@ -1,2 +1,10 @@
-greeting:
-  message: "hello"
+quarkus:
+  http:
+    root-path: /api
+  application:
+    name: "notiflow-native"
+  mailer:
+    host: smtp.resend.com
+    username: resend
+    password: ${MAIL_RESEND_TOKEN}
+    port: 587
