@@ -32,8 +32,8 @@ public class WebEntry {
      * @return void
      */
     @POST
-    @Path("/normal")
     public Response<String> sendNotice(NoticeDTO noticeDTO) {
+        noticeSendServiceService.sendNotice(noticeDTO);
         return Response.success();
     }
 

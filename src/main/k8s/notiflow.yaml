@@ -23,7 +23,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: notiflow
-          image: registry.cn-chengdu.aliyuncs.com/doomer/notiflow:v0.1
+          image: registry.cn-chengdu.aliyuncs.com/doomer/notiflow:dev
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/localtime
@@ -40,6 +40,31 @@ spec:
                 secretKeyRef:
                   name: notiflow-secret
                   key: mail-token
+            - name: DING_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: notiflow-secret
+                  key: ding-token
+            - name: DING_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: notiflow-secret
+                  key: ding-secret
+            - name: DING_ROBOT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notiflow-secret
+                  key: ding-robot-url
+            - name: GOTIFY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: notiflow-secret
+                  key: gotify-token
+            - name: NOTICE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notiflow-secret
+                  key: notice-url
           resources:
             requests:
               memory: "256Mi"

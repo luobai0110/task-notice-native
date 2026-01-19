@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -66,3 +66,55 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
+      - name: Send workflow result (markdown)
+        uses: actions/github-script@v7
+        env:
+          TAGS: ${{ steps.tags.outputs.tags }}
+        with:
+          script: |
+            const core = require('@actions/core');
+            const url = 'https://notice.yuanzhou.site/api/notice';
+            const lines = [
+              '## 构建完成',
+              `- Repo: ${process.env.GITHUB_REPOSITORY}`,
+              `- Ref: ${process.env.GITHUB_REF_NAME}`,
+              `- SHA: ${process.env.GITHUB_SHA}`,
+              `- Tags: ${process.env.TAGS}`
+            ];
+            const payload = { message: lines.join('\n'), type: 4 };
+            try {
+              const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              if (!res.ok) core.warning(`notify failed: ${res.status} ${res.statusText}`);
+            } catch (e) {
+              core.warning(`notify error: ${e.message}`);
+            }
+      - name: Send workflow result (markdown)
+        uses: actions/github-script@v7
+        env:
+          TAGS: ${{ steps.tags.outputs.tags }}
+        with:
+          script: |
+            const core = require('@actions/core');
+            const url = 'https://notice.yuanzhou.site/api/notice';
+            const lines = [
+              '## 构建完成',
+              `- Repo: ${process.env.GITHUB_REPOSITORY}`,
+              `- Ref: ${process.env.GITHUB_REF_NAME}`,
+              `- SHA: ${process.env.GITHUB_SHA}`,
+              `- Tags: ${process.env.TAGS}`
+            ];
+            const payload = { message: lines.join('\n'), type: 4 };
+            try {
+              const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              if (!res.ok) core.warning(`notify failed: ${res.status} ${res.statusText}`);
+            } catch (e) {
+              core.warning(`notify error: ${e.message}`);
+            }

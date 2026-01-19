@@ -17,7 +17,7 @@ bin/
 *.ipr
 *.iml
 *.iws
-
+src/main/k8s/notiflow-secret.yaml
 # NetBeans
 nb-configuration.xml
 
