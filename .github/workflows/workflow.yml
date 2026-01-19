@@ -72,7 +72,6 @@ jobs:
           TAGS: ${{ steps.tags.outputs.tags }}
         with:
           script: |
-            const core = require('@actions/core');
             const url = 'https://notice.yuanzhou.site/api/notice';
             const lines = [
               '## 构建完成',
@@ -98,7 +97,6 @@ jobs:
           TAGS: ${{ steps.tags.outputs.tags }}
         with:
           script: |
-            const core = require('@actions/core');
             const url = 'https://notice.yuanzhou.site/api/notice';
             const lines = [
               '## 构建完成',
