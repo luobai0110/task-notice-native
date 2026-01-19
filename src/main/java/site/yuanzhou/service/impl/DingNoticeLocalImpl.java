@@ -23,12 +23,10 @@ public class DingNoticeLocalImpl implements NoticeLocalService {
     private final DingTalkRobotClient dingTalkRobotClient;
 
     private final AppConfig config;
-    private final ObjectMapper objectMapper;
 
-    public DingNoticeLocalImpl(@RestClient DingTalkRobotClient dingTalkRobotClient, AppConfig appConfig, ObjectMapper objectMapper) {
+    public DingNoticeLocalImpl(@RestClient DingTalkRobotClient dingTalkRobotClient, AppConfig appConfig) {
         this.dingTalkRobotClient = dingTalkRobotClient;
         this.config = appConfig;
-        this.objectMapper = objectMapper;
     }
 
 
@@ -38,10 +36,15 @@ public class DingNoticeLocalImpl implements NoticeLocalService {
         var now = System.currentTimeMillis();
         var sign = SignUtils.getSign(config.dingTalk().secret(), now);
         var dingTalkDTO = new DingTalkDTO();
-        dingTalkDTO.setMsgtype("text");
-        dingTalkDTO.setText(new DingTalkDTO.Text(noticeDTO.getMessage()));
-//        var json = objectMapper.writeValueAsString(dingTalkDTO);
-//        log.info("发送钉钉通知{}", json);
+        dingTalkDTO.setMsgtype("markdown");
+        var markdown = new DingTalkDTO.Markdown();
+        var content = """
+                ### %s
+                %s
+                """.formatted(noticeDTO.getTitle(), noticeDTO.getMessage());
+        markdown.setTitle(noticeDTO.getTitle());
+        markdown.setText(content);
+        dingTalkDTO.setMarkdown(markdown);
         var resp = dingTalkRobotClient.sendNotice(dingTalkDTO, config.dingTalk().token(), sign, now)
                 .await().indefinitely();
 
