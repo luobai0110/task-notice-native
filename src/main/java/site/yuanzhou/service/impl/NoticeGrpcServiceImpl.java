@@ -3,13 +3,12 @@ package site.yuanzhou.service.impl;
 import com.google.protobuf.Empty;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
+import site.yuanzhou.entity.GotifyDTO;
 import site.yuanzhou.entity.MailDTO;
 import site.yuanzhou.entity.NoticeDTO;
+import site.yuanzhou.entity.WechatDTO;
 import site.yuanzhou.entity.enums.NoticeTypeEnum;
-import site.yuanzhou.proto.MailGrpcDTO;
-import site.yuanzhou.proto.NoticeGrpcDTO;
-import site.yuanzhou.proto.NoticeService;
-import site.yuanzhou.proto.WechatGrpcDTO;
+import site.yuanzhou.proto.*;
 import site.yuanzhou.service.NoticeSendService;
 
 @GrpcService
@@ -24,7 +23,7 @@ public class NoticeGrpcServiceImpl implements NoticeService {
     @Override
     public Uni<Empty> sendMailNotice(MailGrpcDTO request) {
         MailDTO dto = new MailDTO();
-        dto.setContent(request.getContent());
+        dto.setMessage(request.getContent());
         if (request.hasFrom()) dto.setFrom(request.getFrom());
         if (request.hasTo()) dto.setTo(request.getTo());
         if (request.hasType()) {
@@ -40,7 +39,7 @@ public class NoticeGrpcServiceImpl implements NoticeService {
     @Override
     public Uni<Empty> sendNotice(NoticeGrpcDTO request) {
         NoticeDTO dto = new NoticeDTO();
-        dto.setContent(request.getContent());
+        dto.setMessage(request.getContent());
         dto.setFrom(request.getFrom());
         dto.setTo(request.getTo());
         dto.setType((int) request.getType());
@@ -50,8 +49,8 @@ public class NoticeGrpcServiceImpl implements NoticeService {
 
     @Override
     public Uni<Empty> sendWechatNotice(WechatGrpcDTO request) {
-        NoticeDTO dto = new NoticeDTO();
-        dto.setContent(request.getContent());
+        var dto = new WechatDTO();
+        dto.setMessage(request.getContent());
         dto.setFrom(request.getFrom());
         dto.setTo(request.getTo());
         dto.setType((int) request.getType());
@@ -59,6 +58,22 @@ public class NoticeGrpcServiceImpl implements NoticeService {
             dto.setType(NoticeTypeEnum.WECHAT.getCode());
         }
         noticeSendService.sendNotice(dto);
+        return Uni.createFrom().item(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public Uni<Empty> sendGotifyNotice(GotifyGrpcDTO request) {
+        var dto = new GotifyDTO();
+        dto.setMessage(request.getContent());
+        dto.setType((int) request.getType());
+        dto.setPriority(request.getPriority());
+        dto.setTitle(request.getTitle());
+        dto.setFrom(request.getFrom());
+        if (dto.getType() == null) {
+            dto.setType(NoticeTypeEnum.WECHAT.getCode());
+        }
+
+
         return Uni.createFrom().item(Empty.getDefaultInstance());
     }
 }

@@ -26,7 +26,7 @@ public class EMailNoticeServiceImpl implements NoticeLocalService {
     @Override
     public void sendNotice(NoticeDTO noticeDTO) {
         if (noticeDTO instanceof MailDTO mailDTO) {
-            var mail = Mail.withText(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getContent());
+            var mail = Mail.withText(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getMessage());
             mail.setFrom(mailDTO.getFrom());
             reactiveMailer.send(mail);
         }

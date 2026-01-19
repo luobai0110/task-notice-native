@@ -4,6 +4,7 @@ public enum NoticeTypeEnum {
 
     E_MAIL(1, "email"),
     WECHAT(2, "wechat"),
+    GOTIFY(3, "gotify"),
     OTHER(99, "other");
 
     final Integer code;
@@ -22,7 +23,6 @@ public enum NoticeTypeEnum {
         }
         return OTHER;
     }
-
 
 
     public Integer getCode() {

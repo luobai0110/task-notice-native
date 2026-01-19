@@ -10,7 +10,7 @@ public class NoticeDTO implements Serializable {
     /**
      * 通知内容
      */
-    private String content;
+    private String message;
     /**
      * 来源
      */
@@ -26,12 +26,26 @@ public class NoticeDTO implements Serializable {
      */
     private Integer type;
 
-    public String getContent() {
-        return content;
+    /**
+     * 标题
+     */
+    private String title;
+
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getFrom() {
@@ -61,7 +75,7 @@ public class NoticeDTO implements Serializable {
     @Override
     public String toString() {
         return "NoticeDTO{" +
-                "content='" + content + '\'' +
+                "content='" + message + '\'' +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
                 ", type=" + type +
@@ -73,12 +87,12 @@ public class NoticeDTO implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         NoticeDTO noticeDTO = (NoticeDTO) o;
-        return Objects.equals(content, noticeDTO.content) && Objects.equals(from, noticeDTO.from) && Objects.equals(to, noticeDTO.to) && Objects.equals(type, noticeDTO.type);
+        return Objects.equals(message, noticeDTO.message) && Objects.equals(from, noticeDTO.from) && Objects.equals(to, noticeDTO.to) && Objects.equals(type, noticeDTO.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(content, from, to, type);
+        return Objects.hash(message, from, to, type);
     }
 }
 

@@ -10,6 +10,7 @@ message NoticeGrpcDTO {
   string from = 2;
   string to = 3;
   int64 type = 4;
+  string title = 5;
 }
 
 message MailGrpcDTO {
@@ -18,6 +19,7 @@ message MailGrpcDTO {
   optional string to = 3;
   optional int32 type = 4;
   string subject = 5;
+  string title = 6;
 }
 
 message WechatGrpcDTO {
@@ -25,10 +27,21 @@ message WechatGrpcDTO {
   string from = 2;
   string to = 3;
   int64 type = 4;
+  string title = 5;
+}
+
+message GotifyGrpcDTO {
+  string content = 1;
+  string from = 2;
+  string to = 3;
+  int64 type = 4;
+  int32 priority = 5;
+  string title = 6;
 }
 
 service NoticeService {
   rpc sendMailNotice(MailGrpcDTO) returns (google.protobuf.Empty);
   rpc sendNotice(NoticeGrpcDTO) returns (google.protobuf.Empty);
   rpc sendWechatNotice(WechatGrpcDTO) returns (google.protobuf.Empty);
+  rpc sendGotifyNotice(GotifyGrpcDTO) returns (google.protobuf.Empty);
 }

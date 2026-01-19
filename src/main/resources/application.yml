@@ -1,4 +1,9 @@
 quarkus:
+  rest-client:
+    gotify-api:
+      url: ${NOTICE_URL}
+      logging:
+        scope: request-response
   http:
     root-path: /api
   application:
@@ -8,3 +13,6 @@ quarkus:
     username: resend
     password: ${MAIL_RESEND_TOKEN}
     port: 587
+notiflow:
+  gotify:
+    token: ${GOTIFY_TOKEN}
