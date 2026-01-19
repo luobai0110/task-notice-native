@@ -5,7 +5,7 @@ import site.yuanzhou.entity.enums.NoticeTypeEnum;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class NoticeDTO implements Serializable {
+public class NoticeDTO  implements Serializable {
 
     /**
      * 通知内容

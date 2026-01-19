@@ -5,6 +5,7 @@ public enum NoticeTypeEnum {
     E_MAIL(1, "email"),
     WECHAT(2, "wechat"),
     GOTIFY(3, "gotify"),
+    DING_TALK(4, "dingTalk"),
     OTHER(99, "other");
 
     final Integer code;

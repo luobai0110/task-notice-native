@@ -8,10 +8,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import site.yuanzhou.entity.GotifyDTO;
-import site.yuanzhou.entity.MailDTO;
-import site.yuanzhou.entity.NoticeDTO;
-import site.yuanzhou.entity.WechatDTO;
+import site.yuanzhou.entity.*;
 import site.yuanzhou.entity.resp.Response;
 import site.yuanzhou.service.NoticeSendService;
 
@@ -81,4 +78,17 @@ public class WebEntry {
         return Response.success();
     }
 
+
+    /**
+     * dingding
+     *
+     * @param noticeDTO 微信数据
+     * @return void
+     */
+    @POST
+    @Path("/dingding")
+    public Response<String> sendGotifyNotice(DingTalkDTO noticeDTO) {
+        noticeSendServiceService.sendNotice(noticeDTO);
+        return Response.success();
+    }
 }

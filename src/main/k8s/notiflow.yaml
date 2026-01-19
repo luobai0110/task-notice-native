@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: notiflow
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notiflow
+  namespace: notiflow
+  labels:
+    app: notiflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notiflow
+  template:
+    metadata:
+      labels:
+        app: notiflow
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: notiflow
+          image: registry.cn-chengdu.aliyuncs.com/doomer/notiflow:v0.1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: tz
+              readOnly: true
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 9090
+              name: metrics
+          env:
+            - name: MAIL_RESEND_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: notiflow-secret
+                  key: mail-token
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+              ephemeral-storage: "256Mi"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+              ephemeral-storage: "512Mi"
+      volumes:
+        - name: tz
+          hostPath:
+            path: /etc/localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notiflow-service
+  namespace: notiflow
+spec:
+  selector:
+    app: notiflow
+  type: NodePort
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30088
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+      nodePort: 30099
