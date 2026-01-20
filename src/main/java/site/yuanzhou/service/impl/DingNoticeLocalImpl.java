@@ -39,7 +39,7 @@ public class DingNoticeLocalImpl implements NoticeLocalService {
         dingTalkDTO.setMsgtype("markdown");
         var markdown = new DingTalkDTO.Markdown();
         var content = """
-                ### %s
+                ## %s
                 %s
                 """.formatted(noticeDTO.getTitle(), noticeDTO.getMessage());
         markdown.setTitle(noticeDTO.getTitle());
