@@ -50,69 +50,52 @@ jobs:
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
           echo "Generated tags: ${TAGS}"
 
-      - name: Build and push Native image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./src/main/docker/Dockerfile.native-micro
-          push: true
-          tags: ${{ steps.tags.outputs.tags }}
-          labels: |
-            org.opencontainers.image.source=${{ github.repositoryUrl }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.tag=${{ github.ref_name }}
-            org.opencontainers.image.type=native
-            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64
       - name: Send workflow result (markdown)
+        if: always()
         uses: actions/github-script@v7
         env:
           TAGS: ${{ steps.tags.outputs.tags }}
+          STATUS: ${{ job.status }}
         with:
           script: |
             const url = 'https://notice.yuanzhou.site/api/notice';
-            const lines = [
-              '## 构建完成',
-              `- Repo: ${process.env.GITHUB_REPOSITORY}`,
-              `- Ref: ${process.env.GITHUB_REF_NAME}`,
-              `- SHA: ${process.env.GITHUB_SHA}`,
-              `- Tags: ${process.env.TAGS}`
-            ];
-            const payload = { message: lines.join('\n'), type: 4 };
+            
+            const {
+              GITHUB_REPOSITORY,
+              GITHUB_REF_NAME,
+              GITHUB_SHA,
+              GITHUB_RUN_ID,
+              GITHUB_SERVER_URL
+            } = process.env;
+            
+            const status = process.env.STATUS || 'unknown';
+            const tags = process.env.TAGS || 'N/A';
+            
+            const title = status.toUpperCase();
+            
+            const message = [
+              '## 构建结果',
+              '',
+              `- **Repository**: \`${GITHUB_REPOSITORY}\``,
+              `- **Ref**: \`${GITHUB_REF_NAME}\``,
+              `- **Commit**: \`${GITHUB_SHA}\``,
+              `- **Tags**: \`${tags}\``,
+              '',
+              `[查看 Workflow 详情](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})`
+            ].join('\n');
+            
+            const payload = {
+              message,
+              type: 4,
+              title
+            };
+            
             try {
-              const res = await fetch(url, {
+              await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
               });
-              if (!res.ok) core.warning(`notify failed: ${res.status} ${res.statusText}`);
-            } catch (e) {
-              core.warning(`notify error: ${e.message}`);
-            }
-      - name: Send workflow result (markdown)
-        uses: actions/github-script@v7
-        env:
-          TAGS: ${{ steps.tags.outputs.tags }}
-        with:
-          script: |
-            const url = 'https://notice.yuanzhou.site/api/notice';
-            const lines = [
-              '## 构建完成',
-              `- Repo: ${process.env.GITHUB_REPOSITORY}`,
-              `- Ref: ${process.env.GITHUB_REF_NAME}`,
-              `- SHA: ${process.env.GITHUB_SHA}`,
-              `- Tags: ${process.env.TAGS}`
-            ];
-            const payload = { message: lines.join('\n'), type: 4 };
-            try {
-              const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-              });
-              if (!res.ok) core.warning(`notify failed: ${res.status} ${res.statusText}`);
             } catch (e) {
               core.warning(`notify error: ${e.message}`);
             }
