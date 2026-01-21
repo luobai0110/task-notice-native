@@ -29,15 +29,14 @@ public class EMailNoticeServiceImpl implements NoticeLocalService {
     @Override
     public void sendNotice(NoticeDTO noticeDTO) {
         if (noticeDTO instanceof MailDTO mailDTO) {
+            Mail mail;
             if (Objects.equals(EmailType.HTML.getCode(), mailDTO.getMailType())) {
-                var mail = Mail.withHtml(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getMessage());
-                mail.setFrom(mailDTO.getFrom());
-                reactiveMailer.send(mail);
+                mail = Mail.withHtml(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getMessage());
             } else {
-                var mail = Mail.withText(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getMessage());
-                mail.setFrom(mailDTO.getFrom());
-                reactiveMailer.send(mail);
+                mail = Mail.withText(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getMessage());
             }
+            mail.setFrom(mailDTO.getFrom());
+            reactiveMailer.send(mail).await().indefinitely();
         }
     }
 }

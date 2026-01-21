@@ -17,6 +17,7 @@ quarkus:
     username: resend
     password: ${MAIL_RESEND_TOKEN}
     port: 587
+    mock: false
 notiflow:
   gotify:
     token: ${GOTIFY_TOKEN}
