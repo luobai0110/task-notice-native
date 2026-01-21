@@ -8,8 +8,11 @@ import jakarta.inject.Named;
 import site.yuanzhou.anno.ServiceType;
 import site.yuanzhou.entity.MailDTO;
 import site.yuanzhou.entity.NoticeDTO;
+import site.yuanzhou.entity.enums.EmailType;
 import site.yuanzhou.entity.enums.NoticeTypeEnum;
 import site.yuanzhou.service.NoticeLocalService;
+
+import java.util.Objects;
 
 @ServiceType(NoticeTypeEnum.E_MAIL)
 @ApplicationScoped
@@ -26,9 +29,15 @@ public class EMailNoticeServiceImpl implements NoticeLocalService {
     @Override
     public void sendNotice(NoticeDTO noticeDTO) {
         if (noticeDTO instanceof MailDTO mailDTO) {
-            var mail = Mail.withText(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getMessage());
-            mail.setFrom(mailDTO.getFrom());
-            reactiveMailer.send(mail);
+            if (Objects.equals(EmailType.HTML.getCode(), mailDTO.getMailType())) {
+                var mail = Mail.withHtml(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getMessage());
+                mail.setFrom(mailDTO.getFrom());
+                reactiveMailer.send(mail);
+            } else {
+                var mail = Mail.withText(mailDTO.getTo(), mailDTO.getSubject(), mailDTO.getMessage());
+                mail.setFrom(mailDTO.getFrom());
+                reactiveMailer.send(mail);
+            }
         }
     }
 }

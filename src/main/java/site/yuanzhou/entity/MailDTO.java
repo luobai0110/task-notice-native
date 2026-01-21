@@ -1,7 +1,10 @@
 package site.yuanzhou.entity;
 
-import java.util.Objects;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class MailDTO extends NoticeDTO {
 
     /**
@@ -9,30 +12,8 @@ public class MailDTO extends NoticeDTO {
      */
     private String subject;
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    @Override
-    public String toString() {
-        return "MailDTO{" +
-                "subject='" + subject + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        MailDTO mailDTO = (MailDTO) o;
-        return Objects.equals(subject, mailDTO.subject);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(subject);
-    }
+    /**
+     * 邮件类型
+     */
+    private Integer mailType;
 }

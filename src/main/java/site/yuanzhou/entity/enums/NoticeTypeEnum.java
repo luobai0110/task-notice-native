@@ -1,5 +1,8 @@
 package site.yuanzhou.entity.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum NoticeTypeEnum {
 
     E_MAIL(1, "email"),
@@ -26,11 +29,4 @@ public enum NoticeTypeEnum {
     }
 
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public String getValue() {
-        return value;
-    }
 }
