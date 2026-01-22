@@ -5,6 +5,7 @@ import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.reactive.ReactiveMailer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
+import lombok.extern.slf4j.Slf4j;
 import site.yuanzhou.anno.ServiceType;
 import site.yuanzhou.entity.MailDTO;
 import site.yuanzhou.entity.NoticeDTO;
@@ -14,6 +15,7 @@ import site.yuanzhou.service.NoticeLocalService;
 
 import java.util.Objects;
 
+@Slf4j
 @ServiceType(NoticeTypeEnum.E_MAIL)
 @ApplicationScoped
 @Named("emailNoticeService")
@@ -37,6 +39,7 @@ public class EMailNoticeServiceImpl implements NoticeLocalService {
             }
             mail.setFrom(mailDTO.getFrom());
             reactiveMailer.send(mail).await().indefinitely();
+            log.info("EMailNoticeServiceImpl#sendNotice: 发送邮件通知{}", mailDTO);
         }
     }
 }

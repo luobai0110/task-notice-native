@@ -2,6 +2,7 @@ package site.yuanzhou.service.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
+import lombok.extern.slf4j.Slf4j;
 import site.yuanzhou.anno.ServiceType;
 import site.yuanzhou.config.AppConfig;
 import site.yuanzhou.entity.GotifyDTO;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @ApplicationScoped
 @ServiceType(NoticeTypeEnum.GOTIFY)
 @Named("gotifyNoticeService")
+@Slf4j
 public class GotifyLocalServiceImpl implements NoticeLocalService {
 
 
@@ -39,6 +41,7 @@ public class GotifyLocalServiceImpl implements NoticeLocalService {
         var token = config.gotify().token();
         if (noticeDTO instanceof GotifyDTO gotifyDTO) {
             gotifyClient.sendNotice(gotifyDTO, token).await().indefinitely();
+            log.info("GotifyLocalServiceImpl#sendNotice:========>发送gotify通知{}", noticeDTO);
         }
     }
 }

@@ -48,7 +48,7 @@ public class DingNoticeLocalImpl implements NoticeLocalService {
         var resp = dingTalkRobotClient.sendNotice(dingTalkDTO, config.dingTalk().token(), sign, now)
                 .await().indefinitely();
 
-        log.info("发送钉钉通知{}", resp);
+        log.info("DingNoticeLocalImpl#sendNotice:========>发送钉钉通知{}", resp);
 
     }
 }
